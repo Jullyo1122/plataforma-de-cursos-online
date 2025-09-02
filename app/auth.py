@@ -10,6 +10,7 @@ def hello():
 class Login(BaseModel):
     id: int
     senha: str
+    role: str
 
 # Banco de dados simulado
 db = {
@@ -20,8 +21,9 @@ db = {
 @app.post("/login")
 def auth(dados: Login):
     if dados.id in db and db[dados.id]["senha"] == dados.senha:
-        return {"status": "sucesso", "mensagem": "Login realizado!"}
+        return {"status": "sucesso", "mensagem": "Login realizado!", "role": db[dados.id]["role"]}
     return {"status": "erro", "mensagem": "Usuário ou senha incorretos"}
+
 
 class Cadastro(BaseModel):
     email: str
