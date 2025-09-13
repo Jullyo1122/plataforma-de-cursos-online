@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from areaaluno import cursos
+from auth import db
 
 app = FastAPI()
 @app.get("/cursos")
@@ -18,3 +19,4 @@ def criar_curso(dados: NovoCurso):
     
     cursos[dados.titulo_curso] = dados.descricao
     return {"status": "Sucesso", "mensagem": "Curso criado com sucesso", "curso": dados.titulo_curso}
+

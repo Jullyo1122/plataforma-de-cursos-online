@@ -17,13 +17,27 @@ db = {
     1: {"email": "teste@email.com", "senha": "1234", "role": "aluno"},
     2: {"email": "abc@email.com", "senha": "abcd", "role": "professor"}
 }
+lista_alunos = {}
+lista_professores = {}
 
 @app.post("/login")
 def auth(dados: Login):
     if dados.id in db and db[dados.id]["senha"] == dados.senha:
-        return {"status": "sucesso", "mensagem": "Login realizado!", "role": db[dados.id]["role"]}
-    return {"status": "erro", "mensagem": "Usuário ou senha incorretos"}
+        usuario = db[dados.id]
+        if usuario["role"] == "aluno":
+            lista_alunos[dados.id] = usuario
+        
+        if usuario["role"] == "professor":
+            lista_professores[dados.id] = usuario
 
+        return {
+            "status": "sucesso",
+            "mensagem": "Login realizado!",
+            "role": usuario["role"] 
+        
+        }
+        
+    return {"status": "erro", "mensagem": "Usuário ou senha incorretos"}
 
 class Cadastro(BaseModel):
     email: str
