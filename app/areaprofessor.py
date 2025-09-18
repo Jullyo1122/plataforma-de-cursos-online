@@ -9,14 +9,23 @@ def listar_cursos():
     return {"mensagem": "Catálogo de cursos", "cursos": cursos}
 
 class NovoCurso(BaseModel):
-    titulo_curso: str
+    id: int
+    nome: str
     descricao: str
 
 @app.post("/novocurso")
 def criar_curso(dados: NovoCurso):
-    if dados.titulo_curso in cursos:
-         return {"status": "Erro", "mensagem": "Esse curso já está no catálogo"}
-    
-    cursos[dados.titulo_curso] = dados.descricao
-    return {"status": "Sucesso", "mensagem": "Curso criado com sucesso", "curso": dados.titulo_curso}
+    # Verifica se o ID já existe
+    if dados.id in cursos:
+        return {"status": "Erro", "mensagem": "Esse ID de curso já existe"}
+    # Verifica se já existe curso com esse nome
+    for curso in cursos.values():
+        if curso["nome"].lower() == dados.nome.lower():
+            return {"status": "Erro", "mensagem": "Esse curso já está no catálogo"}
+    cursos[dados.id] = {
+        "nome": dados.nome,
+        "descricao": dados.descricao,
+        "alunos": []
+    }
+    return {"status": "Sucesso", "mensagem": "Curso criado com sucesso", "curso": dados.nome}
 
