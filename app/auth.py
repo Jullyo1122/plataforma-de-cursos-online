@@ -3,10 +3,6 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-@app.get("/")
-def hello():
-    return {"mensagem": "Olá, FastAPI!"}
-
 class Login(BaseModel):
     id: int
     senha: str
@@ -26,17 +22,13 @@ def auth(dados: Login):
         usuario = db[dados.id]
         if usuario["role"] == "aluno":
             lista_alunos[dados.id] = usuario
-        
         if usuario["role"] == "professor":
             lista_professores[dados.id] = usuario
-
         return {
             "status": "sucesso",
             "mensagem": "Login realizado!",
             "role": usuario["role"] 
-        
         }
-        
     return {"status": "erro", "mensagem": "Usuário ou senha incorretos"}
 
 class Cadastro(BaseModel):

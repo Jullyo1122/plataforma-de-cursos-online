@@ -28,4 +28,22 @@ def criar_curso(dados: NovoCurso):
         "alunos": []
     }
     return {"status": "Sucesso", "mensagem": "Curso criado com sucesso", "curso": dados.nome}
-
+@app.put("/cursos/{id}")
+def editar_curso(id: int, dados: NovoCurso):
+    if id not in cursos:
+        return {"status": "Erro", "mensagem": "Curso não encontrado"}
+    cursos[id] = {
+        "nome": dados.nome,
+        "descricao": dados.descricao,
+        "alunos": cursos[id]["alunos"]
+    }
+    return{"status": "Sucesso", "mensagem": "Curso atualizado", "curso": cursos[id]}
+@app.delete("/cursos/{id}")
+def excluir_curso(id: int):
+     if id not in cursos:
+        return {"status": "Erro", "mensagem": "Curso não encontrado"}
+     curso_removido = cursos.pop(id)
+     return {
+        "status": "Sucesso",
+        "mensagem": f"Curso '{curso_removido['nome']}' removido com sucesso"
+    }
