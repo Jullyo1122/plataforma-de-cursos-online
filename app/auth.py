@@ -1,7 +1,7 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 from pydantic import BaseModel
 
-app = FastAPI()
+router = APIRouter()
 
 class Login(BaseModel):
     id: int
@@ -16,7 +16,7 @@ db = {
 lista_alunos = {}
 lista_professores = {}
 
-@app.post("/login")
+@router.post("/login")
 def auth(dados: Login):
     if dados.id in db and db[dados.id]["senha"] == dados.senha:
         usuario = db[dados.id]
@@ -37,7 +37,7 @@ class Cadastro(BaseModel):
     id: int
     role: str
 
-@app.post("/cadastro")
+@router.post("/cadastro")
 def cad(dados: Cadastro):
     # Verifica se o id já existe
     if dados.id in db:

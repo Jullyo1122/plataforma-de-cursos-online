@@ -1,8 +1,8 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 from pydantic import BaseModel
 from auth import db
 
-app = FastAPI()
+router = APIRouter()
 
 cursos = {
     1: {"nome": "Python", "descricao": "Introdução Python", "alunos": []},
@@ -10,13 +10,13 @@ cursos = {
     3: {"nome": "Front-end", "descricao": "Fundamentos em Desenvolvimento Web", "alunos": []}
 }
 
-@app.get("/cursos")
+@router.get("/cursos")
 def catologo():
     return {"mensagem": "Cursos disponiveis", "cursos": cursos}
 
 meus_cursos = {}
 
-@app.get("/meus-cursos/{aluno_id}")
+@router.get("/meus-cursos/{aluno_id}")
 def acessar_cursos(aluno_id: int):
     return {"mensagem": "Meus cursos", "acessar": meus_cursos.get(aluno_id, [])}
 
@@ -24,7 +24,7 @@ class Matricula(BaseModel):
     aluno_id: int
     curso_id: int
 
-@app.post("/matricula")
+@router.post("/matricula")
 def matricular(dados: Matricula):
      aluno_id = dados.aluno_id  
      curso_id = dados.curso_id  

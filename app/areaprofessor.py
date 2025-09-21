@@ -1,10 +1,9 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 from pydantic import BaseModel
 from areaaluno import cursos
-from auth import db
 
-app = FastAPI()
-@app.get("/cursos")
+router = APIRouter()
+@router.get("/cursos")
 def listar_cursos():
     return {"mensagem": "Catálogo de cursos", "cursos": cursos}
 
@@ -13,7 +12,7 @@ class NovoCurso(BaseModel):
     nome: str
     descricao: str
 
-@app.post("/novocurso")
+@router.post("/novocurso")
 def criar_curso(dados: NovoCurso):
     # Verifica se o ID já existe
     if dados.id in cursos:
@@ -28,7 +27,8 @@ def criar_curso(dados: NovoCurso):
         "alunos": []
     }
     return {"status": "Sucesso", "mensagem": "Curso criado com sucesso", "curso": dados.nome}
-@app.put("/cursos/{id}")
+
+@router.put("/cursos/{id}")
 def editar_curso(id: int, dados: NovoCurso):
     if id not in cursos:
         return {"status": "Erro", "mensagem": "Curso não encontrado"}
@@ -38,7 +38,8 @@ def editar_curso(id: int, dados: NovoCurso):
         "alunos": cursos[id]["alunos"]
     }
     return{"status": "Sucesso", "mensagem": "Curso atualizado", "curso": cursos[id]}
-@app.delete("/cursos/{id}")
+
+@router.delete("/cursos/{id}")
 def excluir_curso(id: int):
      if id not in cursos:
         return {"status": "Erro", "mensagem": "Curso não encontrado"}
